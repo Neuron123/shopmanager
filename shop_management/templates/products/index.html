@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% include "navbar.html" %}
+
+<div class="wrapper">
+
+    <!-- Speech -->
+<video width="320" height="240" autoplay id="vid" preload="true" muted="muted">
+<source src="https://d35qcqbovvvp4w.cloudfront.net/web/main-page/main-page-girl/1600x.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+
+<p style="position:absolute; top:40%;left: 2px;background-color: white;" id="speech"></p>
+    <div class="container">
+        <div class="row">
+            {% include "sidebar.html" %}
+
+            <div class="span9">
+                <div class="content">
+
+                    <div class="module">
+                        <div class="module-head">
+                            <h3>Product Details</h3>
+                        </div>
+                        <div class="module-body table">
+                            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper" role="grid">
+                                
+                                <div class="dataTables_filter" id="DataTables_Table_0_filter">
+                                    <label>
+                                        <!-- Button trigger modal -->
+                                        <a href="#" class="btn btn-primary float-right" data-toggle="modal" data-target="#customerModal">Add product</a> 
+                                    </label>
+                                </div>
+
+  
+  <!-- Product Modal -->
+  <div class="modal fade" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Product</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <form method="post" action="{% url 'products:home' %}">
+        <div class="modal-body">
+          
+              {% csrf_token %}
+              {{ productAddForm }}
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+
+      </div>
+    </div>
+  </div>
+  <!-- End modal -->
+                                 <table cellpadding="0" cellspacing="0" border="0" class="datatable-1 table table-bordered table-striped  display dataTable" width="100%" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="1" colspan="1">No</th>
+                                        <th rowspan="1" colspan="1">Product</th>
+                                        <th rowspan="1" colspan="1">Type</th>
+                                        <th rowspan="1" colspan="1">Quantity</th>
+                                        <th rowspan="1" colspan="1">Action</th>
+                                    </tr>
+                               
+                                    </thead>
+                                
+                                <tfoot>
+                                    <tr>
+                                        <th rowspan="1" colspan="1">No</th>
+                                        <th rowspan="1" colspan="1">Product</th>
+                                        <th rowspan="1" colspan="1">Type</th>
+                                        <th rowspan="1" colspan="1">Quantity</th>
+                                        <th rowspan="1" colspan="1">Action</th>
+                                    </tr>
+
+                                </tfoot>
+                            <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                    
+                                    {% for product in products %}
+                                    <tr class="gradeA even">
+                                        <td class="  sorting_1"> {{ forloop.counter }} </td>
+                                        <td class=" ">{{ product.product_name }}</td>
+                                        <td class=" ">{{ product.type }}</td>
+                                        <td class="center ">{{ product.quantity }}</td>
+                                        <td class="center ">
+                                          <a href="{% url 'products:product_update' product.id %}"><i class="fa fa-pen btn btn-primary"></i></a>
+                                          <a href="{% url 'products:product_delete' product.id %}"><i class="fa fa-close btn btn-danger"></i></a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                            <div class="dataTables_info" id="DataTables_Table_0_info">Showing 1 to 10 of 57 entries</div><div class="dataTables_paginate paging_two_button btn-group datatable-pagination" id="DataTables_Table_0_paginate"><a class="paginate_disabled_previous" tabindex="0" role="button" id="DataTables_Table_0_previous" aria-controls="DataTables_Table_0"><span>Previous</span><i class="icon-chevron-left shaded"></i></a><a class="paginate_enabled_next" tabindex="0" role="button" id="DataTables_Table_0_next" aria-controls="DataTables_Table_0"><span>Next</span><i class="icon-chevron-right shaded"></i></a></div></div>
+                        </div>
+                    </div><!--/.module-->
+
+                <br>
+                    
+                </div><!--/.content-->
+            </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

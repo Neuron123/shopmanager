@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="navbar navbar-fixed-top">
+    <div class="">
+        <div class="container-fluid">
+            <h1>Shop Manager</h1>
+        </div>
+    </div>
+</div>
+
+
+<div class="wrapper">
+    <img src="{% static 'images/login.gif' %}" alt="user" style="position: absolute;height: 30%;top:8%;">
+   
+    <p style="position:absolute; top:40%;left: 2px;" id="speech"></p>
+    
+
+    <div class="container">
+        <div class="row">
+            <div class="module module-login span4 offset4">
+                <form class="form-vertical" method="post">
+                    {% csrf_token %}
+                    <div class="module-head">
+                        <h3>Sign In</h3>
+
+                       <span class="text text-danger"> {{ form.errors }} </span> 
+                    </div>
+                    <div class="module-body">
+                        <div class="control-group">
+                            <div class="controls row-fluid">
+                                <input name="username" class="span12 form-control" type="text" id="inputEmail" placeholder="Username">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls row-fluid">
+                                <input name="password" class="span12 form-control" type="password" id="inputPassword" placeholder="Password">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-foot">
+                        <div class="control-group">
+                            <div class="controls clearfix">
+                                <button type="submit" class="btn btn-primary pull-right">Login</button>
+                                <label class="checkbox">
+                                    <input type="checkbox"> Remember me
+                                </label>
+                            </div>
+
+                            <li><a href="{% url 'accounts:signup' %}">
+                                Sign Up
+                            </a></li>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div><!--/.wrapper-->
+
+<div class="footer">
+    <div class="container">
+         
+
+        <b class="copyright">&copy; 2022 DCP Trust</b> All rights reserved.
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    
+    var i = 0;
+    var txt = " 'Hi, there? Username and Password please' - Mr.Auth.views ";
+    var speed = 50;
+    
+    function typeWriter() {
+      if (i < txt.length) {
+        document.getElementById("speech").innerHTML += txt.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+      }
+    }
+
+    typeWriter();
+    </script>
+{% endblock %}
