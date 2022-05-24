@@ -1,16 +1,23 @@
 {% extends "base.html" %}
 {% load static %}
+
+  <!-- Specific CSS goes HERE -->
+  {% block stylesheets %}
+  <style>
+      
+  </style>
+  {% endblock stylesheets %}
+
 {% block content %}
 {% include "navbar.html" %}
-
 
 <div class="wrapper">
 
     <!-- Speech -->
-<video width="320" height="240" autoplay id="vid" preload="true" muted="muted">
+<!-- <video width="320" height="240" autoplay id="vid" preload="true" muted="muted">
 <source src="https://d35qcqbovvvp4w.cloudfront.net/web/main-page/main-page-girl/1600x.mp4" type="video/mp4">
 Your browser does not support the video tag.
-</video>
+</video> -->
 
 <p style="position:absolute; top:40%;left: 2px;background-color: white;" id="speech"></p>
     <div class="container">
@@ -26,9 +33,8 @@ Your browser does not support the video tag.
                         </div>
                         <div class="module-body table">
                             
-                            <form method="post" action="{% url 'products:product_update'  %}">
+                            <form method="post" action="">
                                 <div class="modal-body">
-                                  
                                       {% csrf_token %}
                                       {{ form }}
                                   
@@ -49,5 +55,9 @@ Your browser does not support the video tag.
 {% endblock %}
 
 {% block javascripts %}
-
+<script>
+    document.getElementById("id_staff").readOnly = true;
+    document.getElementById("id_quantity").readOnly = true;
+    document.getElementById("id_r_quantity").readOnly = true;
+</script>
 {% endblock %}

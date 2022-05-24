@@ -7,7 +7,7 @@ class Sale(models.Model):
     unit_type = (('Kg','Kgs'),('Tonnes','Tonnes'),('lts','Litres'))
 
     staff = models.CharField(max_length=100)
-    product_name = models.OneToOneField(Product, on_delete = models.CASCADE)
+    product_name = models.ForeignKey(Product, on_delete = models.CASCADE)
     # type = models.CharField(max_length=20,choices=unit_type)
     quantity = models.IntegerField()
     bp_price = models.CharField(max_length=20)
@@ -19,5 +19,5 @@ class Sale(models.Model):
 
     
     def __str__(self):
-        self.getProduct(self)
-        return self.product_name + " - "+ str(self.quantity)
+        # self.getProduct(self)
+        return str(self.product_name) + " - " + str(self.quantity)

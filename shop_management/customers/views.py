@@ -35,7 +35,7 @@ class UpdateCustomerForm(UpdateView):
     model = Customer #model
     fields = '__all__' # fields / if you want to select all fields, use "__all__"
     template_name = 'customers/update.html' # templete for updating
-    success_url="customers/index.html" # posts list url
+    success_url="/dashboard/customers/" # posts list url
 
 #delete customer form
 class DeleteCustomerForm(DeleteView):

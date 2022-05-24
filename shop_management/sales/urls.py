@@ -11,6 +11,6 @@ urlpatterns = [
     
     #product buying price
     path('buying_price/<slug:id>/',getBuyingPrice,name="get_bp"),
-    # path('buying_price/',getBuyingPrice,name="get_bp"),
+    path('sales/check_remaining_product/<int:id>/',getRemainingQuantity,name="get_remaining"),
 
 ]

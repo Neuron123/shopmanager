@@ -6,13 +6,14 @@
 <div class="wrapper">
 
     <!-- Speech -->
-<video width="320" height="240" autoplay id="vid" preload="true" muted="muted">
+<!-- <video width="320" height="240" autoplay id="vid" preload="true" muted="muted">
 <source src="https://d35qcqbovvvp4w.cloudfront.net/web/main-page/main-page-girl/1600x.mp4" type="video/mp4">
 Your browser does not support the video tag.
 </video>
 
 <p style="position:absolute; top:40%;left: 2px;background-color: white;" id="speech"></p>
-    <div class="container">
+  -->
+<div class="container">
         <div class="row">
             {% include "sidebar.html" %}
 
@@ -47,14 +48,15 @@ Your browser does not support the video tag.
 
         <form method="post" action="{% url 'products:home' %}">
         <div class="modal-body">
-          
-              {% csrf_token %}
+          <small id="error-msg-padd" style="display: none;color:brown;">This product already exists in the system</small>
+            
+          {% csrf_token %}
               {{ productAddForm }}
           
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary" id="savebtnid">Save</button>
         </div>
     </form>
 
@@ -68,7 +70,8 @@ Your browser does not support the video tag.
                                         <th rowspan="1" colspan="1">No</th>
                                         <th rowspan="1" colspan="1">Product</th>
                                         <th rowspan="1" colspan="1">Type</th>
-                                        <th rowspan="1" colspan="1">Quantity</th>
+                                        <th rowspan="1" colspan="1">Quantity(Original)</th>
+                                        <th rowspan="1" colspan="1">Quantity(Remaining)</th>
                                         <th rowspan="1" colspan="1">Action</th>
                                     </tr>
                                
@@ -79,7 +82,8 @@ Your browser does not support the video tag.
                                         <th rowspan="1" colspan="1">No</th>
                                         <th rowspan="1" colspan="1">Product</th>
                                         <th rowspan="1" colspan="1">Type</th>
-                                        <th rowspan="1" colspan="1">Quantity</th>
+                                        <th rowspan="1" colspan="1">Quantity(Original)</th>
+                                        <th rowspan="1" colspan="1">Quantity(Remaining)</th>
                                         <th rowspan="1" colspan="1">Action</th>
                                     </tr>
 
@@ -91,7 +95,8 @@ Your browser does not support the video tag.
                                         <td class="  sorting_1"> {{ forloop.counter }} </td>
                                         <td class=" ">{{ product.product_name }}</td>
                                         <td class=" ">{{ product.type }}</td>
-                                        <td class="center ">{{ product.quantity }}</td>
+                                       <td class="center ">{{ product.quantity }}</td>
+                                       <td class="center ">{{ product.r_quantity }}</td>
                                         <td class="center ">
                                           <a href="{% url 'products:product_update' product.id %}"><i class="fa fa-pen btn btn-primary"></i></a>
                                           <a href="{% url 'products:product_delete' product.id %}"><i class="fa fa-close btn btn-danger"></i></a>
@@ -113,5 +118,39 @@ Your browser does not support the video tag.
 {% endblock %}
 
 {% block javascripts %}
+<script>
+    //get buying price
+    $("#id_product_name").on('change',function(){
+        var url = "{% url 'products:check_name' %}";
+        // console.log(url);
+        var product_name1 = document.getElementById("id_product_name");
 
+        // console.log(product_name1.value);
+        $.ajax(
+            {
+                type:'GET',
+                url:url,
+                success:function(response){
+                    // console.log(response.data);
+                    data = response.data;
+                    //loop thru the array and compare
+                    //with the product_name1
+                    for(let i=0;i<data.length;i++){
+                        if(data[i] == product_name1.value){
+                            document.getElementById("error-msg-padd").style.display="block";
+                            document.getElementById("savebtnid").disabled=true;
+                            break;
+                        }
+                        else{
+                            document.getElementById("error-msg-padd").style.display="none";
+                            document.getElementById("savebtnid").disabled=false;
+                            return true;
+                        }
+                    }
+                }
+            }
+        )
+    });
+
+</script>
 {% endblock %}

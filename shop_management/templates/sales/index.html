@@ -3,9 +3,7 @@
 
 {% block stylesheets %}
 <style>
-    #id_bp_price{
-        
-    }
+    
 </style>  
 {% endblock stylesheets %}
 
@@ -15,13 +13,14 @@
 <div class="wrapper">
 
     <!-- Speech -->
-<video width="320" height="240" autoplay id="vid" preload="true" muted="muted">
+<!-- <video width="320" height="240" autoplay id="vid" preload="true" muted="muted">
 <source src="https://d35qcqbovvvp4w.cloudfront.net/web/main-page/main-page-girl/1600x.mp4" type="video/mp4">
 Your browser does not support the video tag.
 </video>
 
 <p style="position:absolute; top:40%;left: 2px;background-color: white;" id="speech"></p>
-    <div class="container">
+     -->
+<div class="container">
         <div class="row">
             {% include "sidebar.html" %}
 
@@ -56,6 +55,7 @@ Your browser does not support the video tag.
 
         <form method="post" action="{% url 'sales:home' %}">
         <div class="modal-body">
+            <small id="error-msg-padd" style="display: none;color:brown;">This product is out of stock</small>
           
               {% csrf_token %}
               {{ saleAddForm }}
@@ -63,7 +63,7 @@ Your browser does not support the video tag.
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary" id="savebtnid">Add Sell</button>
         </div>
     </form>
 
@@ -71,30 +71,40 @@ Your browser does not support the video tag.
     </div>
   </div>
   <!-- End modal -->
-                                 <table cellpadding="0" cellspacing="0" border="0" class="datatable-1 table table-bordered table-striped  display dataTable" width="100%" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" style="width: 100%;">
+             <table cellpadding="0" cellspacing="0" border="0" class="datatable-1 table table-bordered table-striped  display dataTable" width="100%" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" style="width: 100%;">
                                 <thead>
-                                    <tr role="row">
-                                        <th class="sorting_asc" role="columnheader" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" style="width: 135px;">No</th>
-                                        <th class="sorting" role="columnheader" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 203px;">Firstname</th>
-                                        <th class="sorting" role="columnheader" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending" style="width: 183px;">Lastname</th>
-                                        <th class="sorting" role="columnheader" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending" style="width: 114px;">Mobile</th>
-                                        <th class="sorting" role="columnheader" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 79px;">Action</th></tr>
+                                    <tr>
+                                        <th rowspan="1" colspan="1">No</th>
+                                        <th rowspan="1" colspan="1">Product</th>
+                                        <th rowspan="1" colspan="1">Quantity</th>
+                                        <th rowspan="1" colspan="1">Selling Price</th>
+                                        <th rowspan="1" colspan="1">Profit/loss</th>
+                                        <th rowspan="1" colspan="1">Action</th>
+                                    </tr>
                                 </thead>
                                 
                                 <tfoot>
-                                    <tr><th rowspan="1" colspan="1">No</th><th rowspan="1" colspan="1">Firstname</th><th rowspan="1" colspan="1">Lastname</th><th rowspan="1" colspan="1">Mobile</th><th rowspan="1" colspan="1">Action</th></tr>
+                                    <tr>
+                                        <th rowspan="1" colspan="1">No</th>
+                                        <th rowspan="1" colspan="1">Product</th>
+                                        <th rowspan="1" colspan="1">Quantity</th>
+                                        <th rowspan="1" colspan="1">Selling Price</th>
+                                        <th rowspan="1" colspan="1">Profit/loss</th>
+                                        <th rowspan="1" colspan="1">Action</th>
+                                    </tr>
                                 </tfoot>
                             <tbody role="alert" aria-live="polite" aria-relevant="all">
                                     
                                     {% for sale in sales %}
                                     <tr class="gradeA even">
                                         <td class="  sorting_1"> {{ forloop.counter }} </td>
-                                        <td class=" ">{{ sale.sale_name }}</td>
-                                        <td class=" ">{{ sale.type }}</td>
-                                        <td class="center ">{{ sale.quantity }}</td>
+                                        <td class=" ">{{ sale.product_name }}</td>
+                                        <td class=" ">{{ sale.quantity }}</td>
+                                        <td class=" ">{{ sale.sp_price }}</td>
+                                        <td class="center profitloss">{{ sale.profit }}</td>
                                         <td class="center ">
-                                          <a href="{% url 'sale:sale_update' sale.id %}"><i class="fa fa-pen btn btn-primary"></i></a>
-                                          <a href="{% url 'sale:sale_delete' sale.id %}"><i class="fa fa-close btn btn-danger"></i></a>
+                                          <!-- <a href="{% url 'sales:sale_update' sale.id %}"><i class="fa fa-pen btn btn-primary"></i></a> -->
+                                          <!-- <a href="{% url 'sales:sale_delete' sale.id %}"><i class="fa fa-close btn btn-danger"></i></a> -->
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -120,22 +130,87 @@ Your browser does not support the video tag.
 </script>
 
 <script>
+//get buying price
 $("#id_product_name").on('change',function(){
     var serializedData = $(this).serialize();
-    var url = "../buying_price/1/";
+    console.log($(this).val());
+    var param = $(this).val();
+    var url = "../buying_price/"+ param + "/";
     console.log(url);
 
     $.ajax(
         {
             type:'GET',
             url:url,
-
             success:function(response){
-                console.log(response.data);
                 document.getElementById("id_bp_price").value = response.data;
+                
             }
         }
     )
 });
+
+//get selling price
+$("#id_sp_price,#id_quantity").on('keyup',function(){
+    // var serializedData = $(this).serialize();
+    var bp = document.getElementById("id_bp_price").value;
+    var sp = document.getElementById("id_sp_price").value;
+    var qty = document.getElementById("id_quantity").value;
+    var profit = sp - bp;
+    profit = profit * qty;
+    document.getElementById("id_profit").value = profit;
+});
+
+//get all classes with .center
+// change color to green if profit
+// change color to red if loss
+
+var profitloss = document.querySelectorAll(".profitloss");
+
+for(let counter = 0;counter < profitloss.length; counter ++){
+    let currentvalue = parseInt(profitloss[counter].innerHTML);
+    if (currentvalue > 0){
+        profitloss[counter].style.color = "green";
+    }
+    else if(currentvalue == 0){
+        profitloss[counter].style.color = "grey";
+    }
+    else{
+        profitloss[counter].style.color = "red";
+    }
+    
+}
+
+</script>
+
+<script>
+//get r_product
+$("#id_quantity").on('keyup',function(){
+        var product_name1 = document.getElementById("id_product_name");
+        product_name1 = product_name1.value;
+        var url = "/dashboard/sales/check_remaining_product/"+ product_name1 + "/";
+        
+        $.ajax(
+            {
+                type:'GET',
+                url:url,
+                success:function(response){
+                    data = response.product_remaining;
+                    qty = document.getElementById("id_quantity").value;
+                    product_remaining = response.data;
+                    product_remaining = product_remaining - qty;
+
+                    //deactivate sale button 
+                    if(product_remaining < 0){
+                        document.getElementById("error-msg-padd").style.display="block";
+                        document.getElementById("savebtnid").disabled=true;
+                    }else{
+                        document.getElementById("error-msg-padd").style.display="none";
+                        document.getElementById("savebtnid").disabled=false;
+                    }
+                }
+            }
+        )
+    });
 </script>
 {% endblock %}
