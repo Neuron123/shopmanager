@@ -9,10 +9,12 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse
 import snoop
 from loguru import logger 
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 @snoop
 #check if product name exists
+@login_required
 def check_name(request):
     product = Product.objects.all()
     product_list = []
@@ -25,6 +27,7 @@ def check_name(request):
 
 class view_Mr_Warehouse(View):
     @snoop
+    @login_required
     def get(self, request):
         productAddForm = ProductAddForm()
         products = Product.objects.all()
@@ -32,7 +35,7 @@ class view_Mr_Warehouse(View):
 
     @snoop
     # @logger.catch
-
+    @login_required
     def post(self,request):
         product = ProductAddForm(request.POST)
         product = product.save(commit=False)

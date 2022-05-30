@@ -7,12 +7,13 @@ from django.views.generic.edit import UpdateView
 from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
 import snoop
-from loguru import logger 
+from loguru import logger
+from django.contrib.auth.decorators import login_required 
 # Create your views here.
-
 
 class view_John_Keen(View):
     @snoop
+    # @login_required
     def get(self, request):
         customerAddForm = CustomerAddForm()
         customers = Customer.objects.all()
@@ -20,6 +21,7 @@ class view_John_Keen(View):
 
     @snoop
     # @logger.catch
+    @login_required
     def post(self,request):
         customer = CustomerAddForm(request.POST)
         customer = customer.save(commit=False)
